@@ -1,11 +1,11 @@
 import styles from './App.module.css';
-import {Calculator} from './Calculator'
+import { XsOsContainer } from './XsOsContainer';
 
 export const App = () => {
 	return (
 		<div className={styles.app}>
 			<div className={styles.header}>
-				<Calculator />
+				<XsOsContainer />
 			</div>
 		</div>
 	);
