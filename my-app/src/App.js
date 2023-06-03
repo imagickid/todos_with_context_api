@@ -1,28 +1,52 @@
 import styles from './App.module.css';
-import Select from 'react-select';
-
-const productOptions = [
-	{ value: 'tv', label: 'Television' },
-	{ value: 'smartphone', label: 'Smartphone' },
-	{ value: 'laptop', label: 'Laptop' },
-];
-
-const colorOptions = [
-	{ value: 'black', label: 'Black' },
-	{ value: 'silver', label: 'Silver' },
-	{ value: 'white', label: 'White' },
-];
+import { useState } from 'react';
 
 export const App = () => {
+	const [login, setLogin] = useState('');
+	const [loginError, setLoginError] = useState(null);
+
+	const onLoginChange = ({ target }) => {
+		setLogin(target.value);
+
+		let error = null;
+
+		if (!/^[\w_]*$/.test(target.value)) {
+			error = 'Incorrect pasword. use letters, symbols and _';
+		} else if (target.value.length > 20) {
+			error = 'No more than 20 symbols';
+		}
+
+		setLoginError(error);
+	};
+
+	const onLoginBlur = () => {
+		if (login.length < 3) {
+			setLoginError('Incorrect password. More than 3 symbols');
+		}
+	};
+
+	const onSubmit = (event) => {
+		event.preventDefault();
+		console.log(login);
+	};
+
 	return (
 		<div className={styles.app}>
 			<div className={styles.header}>
-				<Select options={productOptions} defaultValue={productOptions[0]} />
-				<Select
-					isMulti
-					options={colorOptions}
-					defaultValue={[colorOptions[0], colorOptions[1]]}
-				/>
+				<form onSubmit={onSubmit}>
+					{loginError && <div className={styles.errorLabel}>{loginError}</div>}
+					<input
+						type="text"
+						name="login"
+						value={login}
+						placeholder="Login"
+						onChange={onLoginChange}
+						onBlur={onLoginBlur}
+					/>
+					<button type="submit" disabled={loginError !== null}>
+						Send
+					</button>
+				</form>
 			</div>
 		</div>
 	);
