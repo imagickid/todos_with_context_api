@@ -1,6 +1,6 @@
 import styles from './App.module.css';
 import * as yup from 'yup';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const loginChangeScheme = yup
 	.string()
@@ -26,12 +26,18 @@ export const App = () => {
 	const [login, setLogin] = useState('');
 	const [loginError, setLoginError] = useState(null);
 
+	const submitButtonRef = useRef(null);
+
 	const onLoginChange = ({ target }) => {
 		setLogin(target.value);
 
 		const error = validateAndGetErrorMessage(loginChangeScheme, target.value);
 
 		setLoginError(error);
+
+		if (target.value.length === 20) {
+			submitButtonRef.current.focus();
+		}
 	};
 
 	const onLoginBlur = () => {
@@ -57,7 +63,11 @@ export const App = () => {
 						onChange={onLoginChange}
 						onBlur={onLoginBlur}
 					/>
-					<button type="submit" disabled={loginError !== null}>
+					<button
+						ref={submitButtonRef}
+						type="submit"
+						disabled={loginError !== null}
+					>
 						Send
 					</button>
 				</form>
