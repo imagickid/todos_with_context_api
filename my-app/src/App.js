@@ -1,73 +1,36 @@
 import styles from './App.module.css';
-import * as yup from 'yup';
-import { useState, useRef } from 'react';
-
-const loginChangeScheme = yup
-	.string()
-	.matches(/^[\w_]*$/, 'Incorrect password. Use letters, symbols and _')
-	.max(20, 'No more than 20 symbols');
-
-const loginBlurScheme = yup.string().min(3, 'Incorrect password. More than 3 symbols');
-
-const validateAndGetErrorMessage = (scheme, value) => {
-	let errorMessage = null;
-
-	try {
-		scheme.validateSync(value, { abortEarly: false });
-	} catch ({ errors }) {
-		errorMessage = errors.join('\n');
-		console.log(errors.join('\n'));
-	}
-
-	return errorMessage;
-};
+import { useForm } from 'react-hook-form';
 
 export const App = () => {
-	const [login, setLogin] = useState('');
-	const [loginError, setLoginError] = useState(null);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			login: '',
+		},
+	});
 
-	const submitButtonRef = useRef(null);
-
-	const onLoginChange = ({ target }) => {
-		setLogin(target.value);
-
-		const error = validateAndGetErrorMessage(loginChangeScheme, target.value);
-
-		setLoginError(error);
-
-		if (target.value.length === 20) {
-			submitButtonRef.current.focus();
-		}
+	const loginProps = {
+		minLength: { value: 3, message: 'More than 3 symbols.' },
+		maxLength: { value: 20, message: 'Less than 20 symbols.' },
+		pattern: { value: /^[\w_]*$/, message: 'Use letters, numbers and _.' },
 	};
 
-	const onLoginBlur = () => {
-		const error = validateAndGetErrorMessage(loginBlurScheme, login);
-		setLoginError(error);
-	};
+	const loginError = errors.login?.message;
 
-	const onSubmit = (event) => {
-		event.preventDefault();
-		console.log(login);
+	const onSubmit = (formData) => {
+		console.log(formData);
 	};
 
 	return (
 		<div className={styles.app}>
 			<div className={styles.header}>
-				<form onSubmit={onSubmit}>
-					{loginError && <div className={styles.errorLabel}>{loginError}</div>}
-					<input
-						type="text"
-						name="login"
-						value={login}
-						placeholder="Login"
-						onChange={onLoginChange}
-						onBlur={onLoginBlur}
-					/>
-					<button
-						ref={submitButtonRef}
-						type="submit"
-						disabled={loginError !== null}
-					>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					{loginError && <div className={styles.errorLabels}>{loginError}</div>}
+					<input type="text" name="login" {...register('login', loginProps)} />
+					<button type="submit" disabled={!!loginError}>
 						Send
 					</button>
 				</form>
