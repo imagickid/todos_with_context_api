@@ -1,5 +1,26 @@
 import styles from './App.module.css';
+import * as yup from 'yup';
 import { useState } from 'react';
+
+const loginChangeScheme = yup
+	.string()
+	.matches(/^[\w_]*$/, 'Incorrect password. Use letters, symbols and _')
+	.max(20, 'No more than 20 symbols');
+
+const loginBlurScheme = yup.string().min(3, 'Incorrect password. More than 3 symbols');
+
+const validateAndGetErrorMessage = (scheme, value) => {
+	let errorMessage = null;
+
+	try {
+		scheme.validateSync(value, { abortEarly: false });
+	} catch ({ errors }) {
+		errorMessage = errors.join('\n');
+		console.log(errors.join('\n'));
+	}
+
+	return errorMessage;
+};
 
 export const App = () => {
 	const [login, setLogin] = useState('');
@@ -8,21 +29,14 @@ export const App = () => {
 	const onLoginChange = ({ target }) => {
 		setLogin(target.value);
 
-		let error = null;
-
-		if (!/^[\w_]*$/.test(target.value)) {
-			error = 'Incorrect pasword. use letters, symbols and _';
-		} else if (target.value.length > 20) {
-			error = 'No more than 20 symbols';
-		}
+		const error = validateAndGetErrorMessage(loginChangeScheme, target.value);
 
 		setLoginError(error);
 	};
 
 	const onLoginBlur = () => {
-		if (login.length < 3) {
-			setLoginError('Incorrect password. More than 3 symbols');
-		}
+		const error = validateAndGetErrorMessage(loginBlurScheme, login);
+		setLoginError(error);
 	};
 
 	const onSubmit = (event) => {
