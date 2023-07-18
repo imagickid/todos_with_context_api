@@ -2,7 +2,7 @@
   "todos": [
     {
       "title": "Zen mode",
-      "checked": false,
+      "checked": true,
       "id": 1
     },
     {

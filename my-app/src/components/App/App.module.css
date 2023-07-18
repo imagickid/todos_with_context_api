@@ -32,20 +32,6 @@ h1 {
 	text-decoration: line-through;
 }
 
-.button {
-	width: 7rem;
-	height: 2.5rem;
-	font-size: 1rem;
-	border-radius: 10px;
-	border: none;
-	cursor: pointer;
-	margin: 1.5rem;
-}
-
-.searchBar {
-	font-size: 1.1rem;
-	padding: 0.5rem;
-}
 
 .buttonGroup {
 	width: 4.5rem;

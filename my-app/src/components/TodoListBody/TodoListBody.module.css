@@ -1,0 +1,27 @@
+.content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.label {
+	display: flex;
+	max-width: 100%;
+	justify-content: space-between;
+	padding: 1rem;
+}
+
+.checkbox {
+	width: 1rem;
+	height: 1rem;
+	align-self: center;
+	margin: 1rem;
+}
+
+.checked {
+	text-decoration: line-through;
+}
+
+.buttonGroup {
+	width: 4.5rem;
+	padding: 0;
+}
